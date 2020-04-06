@@ -54,8 +54,19 @@ class HashTable:
 
         Fill this in.
         '''
-        pass
+        # hash the thing
+        hash_index = self._hash_mod(key)
 
+        # If nothing is at the hash_index create a new thingy there
+        if self.storage[hash_index] is None:
+            self.storage[hash_index] = LinkedPair(key, value)
+
+        # else, COLLISION something must already be there -- make a chain
+        else:
+            #print('Warning: something is already there')
+            new_guy = LinkedPair(key, value)
+            new_guy.next = self.storage[hash_index]
+            self.storage[hash_index] = new_guy
 
 
     def remove(self, key):
@@ -66,7 +77,24 @@ class HashTable:
 
         Fill this in.
         '''
-        pass
+        #hash the thing
+        hash_index = self._hash_mod(key)
+        guy = self.storage[hash_index]
+        prev_guy = None
+
+        #cycle through linked list
+        while guy:
+            # if it's not the right guy, swap guys & move on
+            if guy.key != key:
+                guy, prev_guy = guy.next, guy
+            else:
+                if guy.next == None:
+
+                    # stuck here... # 
+
+                    pass
+
+        print('Warning: key not found')
 
 
     def retrieve(self, key):
@@ -77,7 +105,16 @@ class HashTable:
 
         Fill this in.
         '''
-        pass
+        hash_index = self._hash_mod(key)
+        thing = self.storage[hash_index]
+
+        while thing:
+            if thing.key == key:
+                return thing.value
+            else:
+                thing = thing.next
+
+        return None
 
 
     def resize(self):
@@ -87,7 +124,15 @@ class HashTable:
 
         Fill this in.
         '''
-        pass
+        old = self.storage
+
+        self.capacity *= 2
+        self.storage = [None] * self.capacity
+
+        for thing in old:
+            while thing:
+                self.insert(thing.key, thing.value)
+                thing = thing.next
 
 
 
