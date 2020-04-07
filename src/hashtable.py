@@ -15,6 +15,7 @@ class HashTable:
     def __init__(self, capacity):
         self.capacity = capacity  # Number of buckets in the hash table
         self.storage = [None] * capacity
+        self.count = 0
 
 
     def _hash(self, key):
@@ -79,20 +80,29 @@ class HashTable:
         '''
         #hash the thing
         hash_index = self._hash_mod(key)
-        guy = self.storage[hash_index]
-        prev_guy = None
+        thing = self.storage[hash_index]
+        prev_thing = None
 
         #cycle through linked list
-        while guy:
-            # if it's not the right guy, swap guys & move on
-            if guy.key != key:
-                guy, prev_guy = guy.next, guy
+        while thing:
+            # if it's not the right thing, swap things & move on
+            if thing.key != key:
+                thing, prev_thing = thing.next, thing
+            
+            # Otherwise the key is either right or doesn't exist
             else:
-                if guy.next == None:
-
-                    # stuck here... # 
-
-                    pass
+                # If key IS right...
+                if thing.key == key:
+                    # and if there is a prev_thing
+                    if prev_thing:
+                        # then make prev_thing the thing.
+                        prev_thing.next = thing.next
+                    # otherwise we must be at the begining of the chain...
+                    else:
+                        # so make the thing None
+                        self.storage[hash_index] = None
+                    
+                    return
 
         print('Warning: key not found')
 
